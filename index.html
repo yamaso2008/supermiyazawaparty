@@ -7,9 +7,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lilita+One&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(to bottom, #6dd5ed, #2193b0); /* マリオの空のようなグラデーション */
+            background: linear-gradient(to bottom, #6dd5ed, #2193b0);
             color: #ffffff;
-            font-family: 'Lilita One', cursive; /* 最近のマリオのロゴに近い、丸みのあるフォント */
+            font-family: 'Lilita One', cursive;
             text-align: center;
             margin: 0;
             height: 100vh;
@@ -17,112 +17,285 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* スクロールバーが出ないように */
+            overflow: hidden;
+            position: relative;
         }
 
         h1 {
-            font-family: 'Bangers', cursive; /* より力強いタイトルフォント */
-            color: #ffde26; /* 鮮やかな黄色 */
-            font-size: 5rem;
+            font-family: 'Bangers', cursive;
+            color: #ffde26;
+            font-size: 4rem;
             text-shadow: 
-                -5px -5px 0 #e67e22, /* オレンジ色の内側の影 */
-                5px -5px 0 #e67e22,
-                -5px 5px 0 #e67e22,
-                5px 5px 0 #e67e22,
-                7px 7px 0 #000000; /* 外側の黒い影 */
-            margin-bottom: 3rem;
+                -4px -4px 0 #e67e22, 4px -4px 0 #e67e22, -4px 4px 0 #e67e22, 4px 4px 0 #e67e22, 6px 6px 0 #121111;
+            margin: 1rem 0;
             letter-spacing: 5px;
-            animation: bounceIn 1s ease-out forwards;
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.1); opacity: 0; }
-            60% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); }
         }
 
         #number-display {
-            font-size: 18rem;
+            font-size: 15rem;
             font-weight: bold;
-            color: #ffffff; /* 数字の内部は白 */
-            -webkit-text-stroke: 10px #000000; /* 太い黒い外枠 */
-            text-stroke: 10px #000000;
-            margin-bottom: 3rem;
-            transition: transform 0.1s ease-out; /* ルーレットのアニメーション用 */
-            position: relative;
-            animation: float 3s ease-in-out infinite; /* ふわふわ浮くアニメーション */
+            color: #e4e4de;
+            -webkit-text-stroke: 10px #232222;
+            text-stroke: 10px #1a1a1a;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
         }
 
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
         }
 
         #instruction {
             font-size: 1.8rem;
-            color: #ffffff;
-            text-shadow: 3px 3px 0 #000000;
+            text-shadow: 3px 3px 0 #515151;
+            height: 2rem;
         }
 
         .roulette-active {
-            animation: spin 0.1s infinite;
+            animation: spin 0.1s infinite alternate;
         }
-
         @keyframes spin {
-            0% { transform: translateY(0px) rotate(0deg); }
             100% { transform: translateY(-5px) rotate(3deg); }
         }
 
+        /* --- ボタンエリア --- */
+        #button-area {
+            position: fixed;
+            bottom: 30px;
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+        .action-button {
+            font-family: 'Lilita One', cursive;
+            font-size: 1.5rem;
+            color: #ffffff;
+            border: 4px solid #ffffff;
+            border-radius: 15px;
+            padding: 10px 30px;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out;
+        }
+        .action-button:active {
+            transform: translateY(4px);
+        }
+        #reset-button {
+            background-color: #e74c3c;
+            box-shadow: 0 8px 0 #c0392b;
+        }
+        #reset-button:active { box-shadow: 0 4px 0 #c0392b; }
+        
+        #log-toggle-button {
+            background-color: #2980b9;
+            box-shadow: 0 8px 0 #2471a3;
+        }
+        #log-toggle-button:active { box-shadow: 0 4px 0 #2471a3; }
+        
+        /* --- ログモーダル --- */
+        #log-modal {
+            display: none; /* 初期状態では非表示 */
+            position: fixed;
+            z-index: 20;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        #log-modal-content {
+            background: linear-gradient(to bottom, #4a4a4a, #2c2c2c);
+            margin: auto;
+            padding: 20px;
+            border: 5px solid #ffde26;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #log-list-container {
+            overflow-y: auto;
+        }
+        #log-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        .log-entry {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
+        }
+        #close-log-button {
+            background-color: #e74c3c;
+            box-shadow: 0 6px 0 #c0392b;
+            align-self: center;
+            margin-top: 20px;
+        }
+        #close-log-button:active { box-shadow: 0 3px 0 #c0392b; }
     </style>
 </head>
 <body>
 
     <h1>SUPER MIYAZAWA PARTY</h1>
-
     <div id="number-display">?</div>
-
     <p id="instruction">スペースキーを押してルーレット！</p>
+    
+    <div id="button-area">
+        <button id="reset-button" class="action-button">リセット</button>
+        <button id="log-toggle-button" class="action-button">ログ表示</button>
+    </div>
+
+    <div id="log-modal">
+        <div id="log-modal-content">
+            <h2>ログ</h2>
+            <div id="log-list-container">
+                <ul id="log-list"></ul>
+            </div>
+            <button id="close-log-button" class="action-button">閉じる</button>
+        </div>
+    </div>
 
     <script>
         const numberDisplay = document.getElementById('number-display');
         const instruction = document.getElementById('instruction');
+        const resetButton = document.getElementById('reset-button');
+        const logToggleButton = document.getElementById('log-toggle-button');
+        const logModal = document.getElementById('log-modal');
+        const closeLogButton = document.getElementById('close-log-button');
+        const logList = document.getElementById('log-list');
+        
+        let availableNumbers = [];
+        let logs = [];
         let rouletteInterval;
+        let isSpinning = false;
 
+        // --- データ管理 (LocalStorage) ---
+        const AVAILABLE_NUMBERS_KEY = 'superMiyazawaParty_availableNumbers';
+        const LOGS_KEY = 'superMiyazawaParty_logs';
+
+        function saveData() {
+            localStorage.setItem(AVAILABLE_NUMBERS_KEY, JSON.stringify(availableNumbers));
+            localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
+        }
+
+        function loadData() {
+            const savedNumbers = localStorage.getItem(AVAILABLE_NUMBERS_KEY);
+            const savedLogs = localStorage.getItem(LOGS_KEY);
+
+            if (savedNumbers) {
+                availableNumbers = JSON.parse(savedNumbers);
+            } else {
+                initializeNumbers();
+            }
+
+            if (savedLogs) {
+                logs = JSON.parse(savedLogs);
+            }
+        }
+
+        // --- 初期化 ---
+        function initializeNumbers() {
+            availableNumbers = Array.from({ length: 34 }, (_, i) => i + 1);
+        }
+
+        // --- ログ機能 ---
+        function addLog(number) {
+            const now = new Date();
+            const timestamp = now.toLocaleString('ja-JP');
+            const logEntryData = { timestamp: `[${timestamp}]`, number: number };
+            logs.unshift(logEntryData); // 新しいログを配列の先頭に追加
+            saveData();
+        }
+
+        function renderLogs() {
+            logList.innerHTML = ''; // 既存のリストをクリア
+            if (logs.length === 0) {
+                logList.innerHTML = '<li class="log-entry">ログはまだありません。</li>';
+                return;
+            }
+            logs.forEach(log => {
+                const li = document.createElement('li');
+                li.className = 'log-entry';
+                li.textContent = `${log.timestamp} 数字: ${log.number}`;
+                logList.appendChild(li);
+            });
+        }
+
+        // --- ルーレット機能 ---
         function startRoulette() {
-            // ルーレットがアクティブな間は数字がランダムに高速で切り替わる
+            if (isSpinning) return;
+            isSpinning = true;
+
+            if (availableNumbers.length === 0) {
+                instruction.textContent = 'すべての数字が出ました！';
+                isSpinning = false;
+                return;
+            }
+            
+            instruction.style.display = 'none';
             rouletteInterval = setInterval(() => {
-                numberDisplay.textContent = Math.floor(Math.random() * 34) + 1;
-            }, 50); // 50ミリ秒ごとに数字を更新
-            numberDisplay.classList.add('roulette-active'); // アニメーションクラスを追加
+                const randIndex = Math.floor(Math.random() * availableNumbers.length);
+                numberDisplay.textContent = availableNumbers[randIndex];
+            }, 50);
+            numberDisplay.classList.add('roulette-active');
+            setTimeout(stopRoulette, 1000);
         }
 
         function stopRoulette() {
-            clearInterval(rouletteInterval); // ルーレットを停止
-            const randomNumber = Math.floor(Math.random() * 34) + 1;
-            numberDisplay.textContent = randomNumber; // 最終的な数字を表示
-            numberDisplay.classList.remove('roulette-active'); // アニメーションクラスを削除
+            clearInterval(rouletteInterval);
+            const randIndex = Math.floor(Math.random() * availableNumbers.length);
+            const chosenNumber = availableNumbers.splice(randIndex, 1)[0];
 
-            // 数字が確定した後に少し跳ねるようなアニメーション
-            numberDisplay.style.transition = 'transform 0.1s ease-out';
+            numberDisplay.textContent = chosenNumber;
+            numberDisplay.classList.remove('roulette-active');
+            
             numberDisplay.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                numberDisplay.style.transform = 'scale(1)';
-            }, 100);
+            setTimeout(() => { numberDisplay.style.transform = 'scale(1)'; }, 100);
+            
+            addLog(chosenNumber);
+            isSpinning = false;
         }
 
-        document.body.onkeyup = function(e) {
-            if (e.keyCode == 32) { // スペースキー
-                instruction.style.display = 'none'; // 説明を非表示にする
-                startRoulette(); // ルーレットを開始
-                
-                // 1秒後にルーレットを停止して最終的な数字を表示
-                setTimeout(() => {
-                    stopRoulette();
-                }, 1000); 
+        // --- イベントリスナー ---
+        resetButton.addEventListener('click', () => {
+            if (confirm('本当にリセットしますか？\n（ログもすべて消去されます）')) {
+                initializeNumbers();
+                logs = [];
+                saveData(); // 空のデータを保存してリセットを確定
+                numberDisplay.textContent = '?';
+                instruction.textContent = 'スペースキーを押してルーレット！';
+                instruction.style.display = 'block';
             }
-        }
-    </script>
+        });
 
+        logToggleButton.addEventListener('click', () => {
+            renderLogs(); // モーダルを開く前に最新のログを描画
+            logModal.style.display = 'flex';
+        });
+
+        closeLogButton.addEventListener('click', () => {
+            logModal.style.display = 'none';
+        });
+
+        // モーダルの外側をクリックしても閉じる
+        window.addEventListener('click', (event) => {
+            if (event.target == logModal) {
+                logModal.style.display = 'none';
+            }
+        });
+        
+        document.body.onkeyup = (e) => {
+            if (e.code === 'Space') startRoulette();
+        };
+
+        // --- 起動処理 ---
+        loadData();
+    </script>
 </body>
 </html>
