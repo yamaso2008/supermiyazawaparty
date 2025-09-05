@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPER MIYAZAWA PARTY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lilita+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #6dd5ed, #2193b0); /* マリオの空のようなグラデーション */
+            color: #ffffff;
+            font-family: 'Lilita One', cursive; /* 最近のマリオのロゴに近い、丸みのあるフォント */
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* スクロールバーが出ないように */
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive; /* より力強いタイトルフォント */
+            color: #ffde26; /* 鮮やかな黄色 */
+            font-size: 5rem;
+            text-shadow: 
+                -5px -5px 0 #e67e22, /* オレンジ色の内側の影 */
+                5px -5px 0 #e67e22,
+                -5px 5px 0 #e67e22,
+                5px 5px 0 #e67e22,
+                7px 7px 0 #000000; /* 外側の黒い影 */
+            margin-bottom: 3rem;
+            letter-spacing: 5px;
+            animation: bounceIn 1s ease-out forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.1); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        #number-display {
+            font-size: 18rem;
+            font-weight: bold;
+            color: #ffffff; /* 数字の内部は白 */
+            -webkit-text-stroke: 10px #000000; /* 太い黒い外枠 */
+            text-stroke: 10px #000000;
+            margin-bottom: 3rem;
+            transition: transform 0.1s ease-out; /* ルーレットのアニメーション用 */
+            position: relative;
+            animation: float 3s ease-in-out infinite; /* ふわふわ浮くアニメーション */
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        #instruction {
+            font-size: 1.8rem;
+            color: #ffffff;
+            text-shadow: 3px 3px 0 #000000;
+        }
+
+        .roulette-active {
+            animation: spin 0.1s infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-5px) rotate(3deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>SUPER MIYAZAWA PARTY</h1>
+
+    <div id="number-display">?</div>
+
+    <p id="instruction">スペースキーを押してルーレット！</p>
+
+    <script>
+        const numberDisplay = document.getElementById('number-display');
+        const instruction = document.getElementById('instruction');
+        let rouletteInterval;
+
+        function startRoulette() {
+            // ルーレットがアクティブな間は数字がランダムに高速で切り替わる
+            rouletteInterval = setInterval(() => {
+                numberDisplay.textContent = Math.floor(Math.random() * 34) + 1;
+            }, 50); // 50ミリ秒ごとに数字を更新
+            numberDisplay.classList.add('roulette-active'); // アニメーションクラスを追加
+        }
+
+        function stopRoulette() {
+            clearInterval(rouletteInterval); // ルーレットを停止
+            const randomNumber = Math.floor(Math.random() * 34) + 1;
+            numberDisplay.textContent = randomNumber; // 最終的な数字を表示
+            numberDisplay.classList.remove('roulette-active'); // アニメーションクラスを削除
+
+            // 数字が確定した後に少し跳ねるようなアニメーション
+            numberDisplay.style.transition = 'transform 0.1s ease-out';
+            numberDisplay.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                numberDisplay.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        document.body.onkeyup = function(e) {
+            if (e.keyCode == 32) { // スペースキー
+                instruction.style.display = 'none'; // 説明を非表示にする
+                startRoulette(); // ルーレットを開始
+                
+                // 1秒後にルーレットを停止して最終的な数字を表示
+                setTimeout(() => {
+                    stopRoulette();
+                }, 1000); 
+            }
+        }
+    </script>
+
+</body>
+</html>
