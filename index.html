@@ -26,7 +26,7 @@
             color: #ffde26;
             font-size: 4rem;
             text-shadow: 
-                -4px -4px 0 #e67e22, 4px -4px 0 #e67e22, -4px 4px 0 #e67e22, 4px 4px 0 #e67e22, 6px 6px 0 #121111;
+                -4px -4px 0 #e67e22, 4px -4px 0 #e67e22, -4px 4px 0 #e67e22, 4px 4px 0 #e67e22, 6px 6px 0 #454545;
             margin: 1rem 0;
             letter-spacing: 5px;
         }
@@ -34,9 +34,9 @@
         #number-display {
             font-size: 15rem;
             font-weight: bold;
-            color: #e4e4de;
-            -webkit-text-stroke: 10px #232222;
-            text-stroke: 10px #1a1a1a;
+            color: #ffffff;
+            -webkit-text-stroke: 5px #272727;
+            text-stroke: 10px #121212;
             margin-bottom: 2rem;
             animation: float 3s ease-in-out infinite;
         }
@@ -47,7 +47,7 @@
 
         #instruction {
             font-size: 1.8rem;
-            text-shadow: 3px 3px 0 #515151;
+            text-shadow: 3px 3px 0 #000000;
             height: 2rem;
         }
 
@@ -59,37 +59,38 @@
         }
 
         /* --- ボタンエリア --- */
-        #button-area {
-            position: fixed;
-            bottom: 30px;
-            display: flex;
-            gap: 20px;
-            z-index: 10;
-        }
-        .action-button {
+        #next-player-button {
             font-family: 'Lilita One', cursive;
             font-size: 1.5rem;
             color: #ffffff;
+            background-color: #e74c3c;
             border: 4px solid #ffffff;
             border-radius: 15px;
             padding: 10px 30px;
             cursor: pointer;
             transition: all 0.1s ease-in-out;
-        }
-        .action-button:active {
-            transform: translateY(4px);
-        }
-        #reset-button {
-            background-color: #e74c3c;
             box-shadow: 0 8px 0 #c0392b;
+            position: fixed;
+            bottom: 30px;
+            z-index: 10;
         }
-        #reset-button:active { box-shadow: 0 4px 0 #c0392b; }
+        #next-player-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #c0392b;
+        }
         
-        #log-toggle-button {
-            background-color: #2980b9;
-            box-shadow: 0 8px 0 #2471a3;
+        /* --- ログ表示リンク --- */
+        #log-toggle-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: white;
+            cursor: pointer;
+            text-decoration: underline;
+            text-shadow: 2px 2px 0 #000000;
+            z-index: 10;
         }
-        #log-toggle-button:active { box-shadow: 0 4px 0 #2471a3; }
         
         /* --- ログモーダル --- */
         #log-modal {
@@ -100,7 +101,6 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background-color: rgba(0,0,0,0.6);
             justify-content: center;
             align-items: center;
@@ -131,25 +131,40 @@
             padding: 8px;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
         }
+        .log-separator {
+            text-align: center;
+            color: #ffde26;
+            font-weight: bold;
+        }
         #close-log-button {
-            background-color: #e74c3c;
-            box-shadow: 0 6px 0 #c0392b;
+            font-family: 'Lilita One', cursive;
+            font-size: 1.5rem;
+            color: #ffffff;
+            background-color: #2980b9;
+            border: 4px solid #ffffff;
+            border-radius: 15px;
+            padding: 10px 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #2471a3;
+            transition: all 0.1s ease-in-out;
             align-self: center;
             margin-top: 20px;
         }
-        #close-log-button:active { box-shadow: 0 3px 0 #c0392b; }
+        #close-log-button:active {
+             transform: translateY(4px);
+             box-shadow: 0 3px 0 #2471a3;
+        }
     </style>
 </head>
 <body>
+
+    <div id="log-toggle-link">ログ表示</div>
 
     <h1>SUPER MIYAZAWA PARTY</h1>
     <div id="number-display">?</div>
     <p id="instruction">スペースキーを押してルーレット！</p>
     
-    <div id="button-area">
-        <button id="reset-button" class="action-button">リセット</button>
-        <button id="log-toggle-button" class="action-button">ログ表示</button>
-    </div>
+    <button id="next-player-button">次のプレイヤー</button>
 
     <div id="log-modal">
         <div id="log-modal-content">
@@ -157,27 +172,34 @@
             <div id="log-list-container">
                 <ul id="log-list"></ul>
             </div>
-            <button id="close-log-button" class="action-button">閉じる</button>
+            <button id="close-log-button">閉じる</button>
         </div>
     </div>
 
+    <audio id="roulette-sound" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAW5vrja7Z5r4sAnw0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7A8AAn9+ce0gAIAAAAASW5mbwAAAA8AAAAFAAAEABERPj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4..."></audio>
+    <audio id="decision-sound" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEluZm8AAAAPAAAADAAABAAA19/p9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn9395n9yZ/+KAn98cQAgAAGb/////8K1a3Vtv7y1b2/pmpW1bW29ub///8v/pmpW//pmpW9vby//+ZqVv/+ZqVvby1tb//5mpW1tbW1vby//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbW//+ZqVtbW1tbf/9bW29vby1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbf/+AAAD/7Rso//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tGyn/+0bK//7Rsr//tG..."></audio>
+
     <script>
+        // --- DOM要素の取得 ---
         const numberDisplay = document.getElementById('number-display');
         const instruction = document.getElementById('instruction');
-        const resetButton = document.getElementById('reset-button');
-        const logToggleButton = document.getElementById('log-toggle-button');
+        const nextPlayerButton = document.getElementById('next-player-button');
+        const logToggleLink = document.getElementById('log-toggle-link');
         const logModal = document.getElementById('log-modal');
         const closeLogButton = document.getElementById('close-log-button');
         const logList = document.getElementById('log-list');
+        const rouletteSound = document.getElementById('roulette-sound');
+        const decisionSound = document.getElementById('decision-sound');
         
+        // --- 変数定義 ---
         let availableNumbers = [];
         let logs = [];
         let rouletteInterval;
         let isSpinning = false;
-
+        
         // --- データ管理 (LocalStorage) ---
-        const AVAILABLE_NUMBERS_KEY = 'superMiyazawaParty_availableNumbers';
-        const LOGS_KEY = 'superMiyazawaParty_logs';
+        const AVAILABLE_NUMBERS_KEY = 'superMiyazawaParty_availableNumbers_v2';
+        const LOGS_KEY = 'superMiyazawaParty_logs_v2';
 
         function saveData() {
             localStorage.setItem(AVAILABLE_NUMBERS_KEY, JSON.stringify(availableNumbers));
@@ -205,24 +227,35 @@
         }
 
         // --- ログ機能 ---
-        function addLog(number) {
+        function addLog(logData) {
             const now = new Date();
             const timestamp = now.toLocaleString('ja-JP');
-            const logEntryData = { timestamp: `[${timestamp}]`, number: number };
-            logs.unshift(logEntryData); // 新しいログを配列の先頭に追加
+            
+            const logEntryData = { 
+                timestamp: `[${timestamp}]`, 
+                type: logData.type,
+                value: logData.value
+            };
+            logs.unshift(logEntryData);
             saveData();
         }
 
         function renderLogs() {
-            logList.innerHTML = ''; // 既存のリストをクリア
+            logList.innerHTML = '';
             if (logs.length === 0) {
                 logList.innerHTML = '<li class="log-entry">ログはまだありません。</li>';
                 return;
             }
             logs.forEach(log => {
                 const li = document.createElement('li');
-                li.className = 'log-entry';
-                li.textContent = `${log.timestamp} 数字: ${log.number}`;
+                li.classList.add('log-entry');
+
+                if (log.type === 'separator') {
+                    li.textContent = log.value;
+                    li.classList.add('log-separator');
+                } else {
+                    li.textContent = `${log.timestamp} 数字: ${log.value}`;
+                }
                 logList.appendChild(li);
             });
         }
@@ -239,6 +272,7 @@
             }
             
             instruction.style.display = 'none';
+            rouletteSound.play();
             rouletteInterval = setInterval(() => {
                 const randIndex = Math.floor(Math.random() * availableNumbers.length);
                 numberDisplay.textContent = availableNumbers[randIndex];
@@ -249,6 +283,10 @@
 
         function stopRoulette() {
             clearInterval(rouletteInterval);
+            rouletteSound.pause();
+            rouletteSound.currentTime = 0;
+            decisionSound.play();
+
             const randIndex = Math.floor(Math.random() * availableNumbers.length);
             const chosenNumber = availableNumbers.splice(randIndex, 1)[0];
 
@@ -258,24 +296,29 @@
             numberDisplay.style.transform = 'scale(1.1)';
             setTimeout(() => { numberDisplay.style.transform = 'scale(1)'; }, 100);
             
-            addLog(chosenNumber);
+            addLog({ type: 'number', value: chosenNumber });
             isSpinning = false;
         }
 
         // --- イベントリスナー ---
-        resetButton.addEventListener('click', () => {
-            if (confirm('本当にリセットしますか？\n（ログもすべて消去されます）')) {
-                initializeNumbers();
-                logs = [];
-                saveData(); // 空のデータを保存してリセットを確定
-                numberDisplay.textContent = '?';
-                instruction.textContent = 'スペースキーを押してルーレット！';
-                instruction.style.display = 'block';
+        nextPlayerButton.addEventListener('click', () => {
+            // ログに区切り線を追加
+            if (numberDisplay.textContent !== '?') {
+                 addLog({ type: 'separator', value: '--- 次のプレイヤー ---' });
             }
+            
+            // 数字プールのみリセット
+            initializeNumbers();
+            saveData(); // リセットされた数字プールを保存
+            
+            numberDisplay.textContent = '?';
+            instruction.textContent = 'スペースキーを押してルーレット！';
+            instruction.style.display = 'block';
+            isSpinning = false;
         });
 
-        logToggleButton.addEventListener('click', () => {
-            renderLogs(); // モーダルを開く前に最新のログを描画
+        logToggleLink.addEventListener('click', () => {
+            renderLogs();
             logModal.style.display = 'flex';
         });
 
@@ -283,7 +326,6 @@
             logModal.style.display = 'none';
         });
 
-        // モーダルの外側をクリックしても閉じる
         window.addEventListener('click', (event) => {
             if (event.target == logModal) {
                 logModal.style.display = 'none';
@@ -291,7 +333,9 @@
         });
         
         document.body.onkeyup = (e) => {
-            if (e.code === 'Space') startRoulette();
+            if (e.code === 'Space') {
+                startRoulette();
+            }
         };
 
         // --- 起動処理 ---
